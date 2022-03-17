@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using EventBus.Messages.Events;
+using AutoMapper;
+using MassTransit;
 
 namespace Basket.API.Controllers
 {
@@ -18,23 +21,18 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _repository;
         private readonly DiscountGrpcService _discountGrpcService;
-        //private readonly IPublishEndpoint _publishEndpoint;
-        //private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IMapper _mapper;
 
-       /* public BasketController(IBasketRepository repository, DiscountGrpcService discountGrpcService, IPublishEndpoint publishEndpoint, IMapper mapper)
+        public BasketController(IBasketRepository repository, DiscountGrpcService discountGrpcService, IPublishEndpoint publishEndpoint, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _discountGrpcService = discountGrpcService ?? throw new ArgumentNullException(nameof(discountGrpcService));
             _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-       */
+       
 
-        public BasketController(IBasketRepository repository, DiscountGrpcService discountGrpcService)
-        {
-            _repository = repository;
-            _discountGrpcService = discountGrpcService;
-        }
 
         [HttpGet("{userName}", Name = "GetBasket")]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
@@ -65,7 +63,7 @@ namespace Basket.API.Controllers
             await _repository.DeleteBasket(userName);
             return Ok();
         }
-        /*
+
         [Route("[action]")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
@@ -94,6 +92,6 @@ namespace Basket.API.Controllers
 
             return Accepted();
         }
-        */
+        
     }
 }
